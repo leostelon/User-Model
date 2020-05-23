@@ -1,0 +1,54 @@
+{
+  "Completed": [
+    {
+      "code": 200,
+      "message": "Query executed without any problem"
+    },
+    {
+      "code": 201,
+      "message": "User has been created."
+    },
+    {
+      "code": 202,
+      "message": "Token has been created."
+    }
+  ],
+  "Duplicates": [
+    {
+      "code": 100,
+      "message": "Duplicate username.",
+      "sqlcode": 1062
+    },
+    {
+      "code": 101,
+      "message": "Duplicate email.",
+      "sqlcode": 1062
+    }
+  ],
+  "Token": [
+    {
+      "code": 202,
+      "message": "Token has been created."
+    },
+    {
+      "code": 300,
+      "message": "Problem with token creation."
+    },
+    {
+      "code": 301,
+      "message": "Token generation failed, but user has been created."
+    }
+  ],
+  "Client Side": [
+    {
+      "code": 400,
+      "message": "Bad request."
+    }
+  ],
+  "Uncaught Error": [
+    {
+      "code": 500,
+      "message": "MySQl server side error."
+    }
+  ]
+}
