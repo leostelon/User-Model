@@ -8,6 +8,10 @@ const hash = require("../middlewares/hash");
 const login = require("../middlewares/login");
 const auth = require("../middlewares/auth");
 const setToken = require("../token/token");
+const CheckError = require("../functions/sqlerror");
+
+//Class derived from sqlerror.js from functions
+const checkError = new CheckError();
 
 // Create User
 router.post("/createuser", hash, (req, res) => {
@@ -20,16 +24,7 @@ router.post("/createuser", hash, (req, res) => {
 
   mysql.query(sql, [[[id, ...user]]], async (error, result) => {
     if (error) {
-      if (error.errno === 1062) {
-        if (error.sqlMessage.includes("user.username")) {
-          return response(res, 100, error.sqlMessage);
-        }
-        if (error.sqlMessage.includes("user.email")) {
-          return response(res, 101, error.sqlMessage);
-        }
-      }
-      if (error.errno === 1136) return response(res, 500, "Bad Request.");
-      return response(res, 500, error);
+      return checkError.check(error);
     }
     var token = await setToken(id);
     token
@@ -56,19 +51,29 @@ router.get("/getuser", auth, async (req, res) => {
 //Update User
 router.post("/updateuser", auth, hash, (req, res) => {
   let user = req.body;
-  console.log(user);
-
+  var requiredUpdates = ["username", "password", "email"];
+  var updates = [];
+  for (key in user) {
+    if (!requiredUpdates.includes(key))
+      return response(res, 400, "Bad request.");
+    updates.push(key);
+  }
+  var seperator = ",";
+  let params = ``;
   for (let i = 0; i < updates.length; i++) {
-    if (i === updates.length - 1) {
-      seperator = "";
-    }
+    if (i === updates.length - 1) seperator = "";
     params = params.concat(
-      updates[i] + "=" + "'" + updateDetails[updates[i]] + "'" + seperator
+      updates[i] + "=" + "'" + user[updates[i]] + "'" + seperator
     );
   }
-  var sql = `update user set  WHERE id='${req.user.id}'`;
-  mysql.query(sql);
-  res.send("ok");
+  var sql = `update user set ${params} WHERE id='${req.user.userid}'`;
+  mysql.query(sql, (error, result) => {
+    if (error) {
+      checkError.check(error, res);
+    } else {
+      response(res, 200, "User has been updated");
+    }
+  });
 });
 
 router.get("/test", (req, res) => {});
