@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const mysql = require("../mySQL/sql");
+const mysql = require("./sql");
 
 const setToken = (userid) => {
   return new Promise((resolve, reject) => {

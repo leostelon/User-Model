@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const response = require("../response");
+const response = require("../functions/response");
 
 var hash = async (req, res, next) => {
   if (req.body.password) {

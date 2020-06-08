@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const mysql = require("../mySQL/sql");
+const mysql = require("../functions/sql");
 
 var login = async (req, res, next) => {
   try {
@@ -7,7 +7,7 @@ var login = async (req, res, next) => {
     let user = req.body;
     const sql = `select id,username,password from user where username='${user.username}' limit 1`;
     mysql.query(sql, async (error, result) => {
-      if (error) response(res, 500, error.sqlMessage);
+      if (error) return response(res, 500, error);
       if (result.length <= 0)
         response(res, 200, "No user found by that username.");
       await bcrypt.compare(req.body.password, result[0].password, function (

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
-const mysql = require("../mySQL/sql");
-const response = require("../response");
+const mysql = require("../functions/sql");
+const response = require("../functions/response");
 
 var auth = async (req, res, next) => {
   try {
